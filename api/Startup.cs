@@ -30,6 +30,8 @@ namespace api
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddMvc();
+            
             services.Configure<BookstoreDatabaseSettings>(
                 Configuration.GetSection(nameof(BookstoreDatabaseSettings)));
 
@@ -53,6 +55,13 @@ namespace api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "api v1"));
             }
+
+            app.UseCors(config =>
+            {
+                config.AllowAnyHeader();
+                config.AllowAnyMethod();
+                config.AllowAnyOrigin();
+            });
 
             app.UseHttpsRedirection();
 

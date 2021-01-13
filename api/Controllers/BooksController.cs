@@ -24,6 +24,7 @@ namespace BookApi.Controllers
       return Ok(books);
     }
 
+    [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<Book>> GetById(string id)
     {
       var book = await _bookService.GetByIdAsync(id);
@@ -37,7 +38,7 @@ namespace BookApi.Controllers
     [HttpPost]
     public async Task<IActionResult> Create(Book book)
     {
-      if (!ModelState.IsValid)
+      if (book == null)
       {
         return BadRequest();
       }
@@ -46,19 +47,19 @@ namespace BookApi.Controllers
       return Ok(book);
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Update(string id, Book updateBook)
+    [HttpPut("{id:length(24)}")]
+    public async Task<IActionResult> Update(string id, Book updatedBook)
     {
-      var queriedBook = await _bookService.GetByIdAsync(id);
-      if (queriedBook == null)
+      var book = await _bookService.GetByIdAsync(id);
+      if (book == null)
       {
         return NotFound();
       }
-      await _bookService.UpdateAsync(id, updateBook);
+      await _bookService.UpdateAsync(id, updatedBook);
       return NoContent();
     }
 
-    [HttpDelete]
+    [HttpDelete("{id:length(24)}")]
     public async Task<IActionResult> Delete(string id)
     {
       var book = await _bookService.GetByIdAsync(id);
@@ -68,7 +69,7 @@ namespace BookApi.Controllers
         return NotFound();
       }
 
-      await _bookService.DeleteAsync(id);
+      await _bookService.DeleteAsync(book.Id);
       return NoContent();
     }
   }
